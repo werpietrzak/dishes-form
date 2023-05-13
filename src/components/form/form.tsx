@@ -1,4 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { FieldValues } from 'react-hook-form/dist/types';
 import { DISH_TYPES } from '../../constants';
 import './form.scss';
 
@@ -7,27 +9,44 @@ const CN = 'form';
 export const Form: React.FC = () => {
     const [selectedType, setSelectedType] = useState<string | null>(null);
 
+    const { register, handleSubmit } = useForm();
+
     const handleSelectType = (event: ChangeEvent<HTMLSelectElement>): void => {
         setSelectedType(event.target.value);
     };
 
+    const onSubmit = (data: FieldValues): void => {
+        console.log(data);
+    };
+
     return (
         <div>
-            <form>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <div>
                     <label htmlFor="name">Name</label>
-                    <input type="text" id="name" />
+                    <input
+                        type="text"
+                        id="name"
+                        {...register('name', { required: true })}
+                    />
                 </div>
                 <div>
                     <label htmlFor="prep-time">Preparation time</label>
-                    <input type="time" id="prep-time" />
+                    <input
+                        type="time"
+                        id="prep-time"
+                        {...register('prep-time', { required: true })}
+                    />
                 </div>
                 <div>
                     <label htmlFor="dish-type">Type</label>
                     <select
                         id="dish-type"
                         defaultValue=""
-                        onChange={handleSelectType}
+                        {...register('dish-type', {
+                            required: true,
+                            onChange: event => handleSelectType(event),
+                        })}
                     >
                         <option value="" className={`${CN}__select-option`} />
                         {DISH_TYPES.map(({ label, value }) => (
@@ -43,24 +62,51 @@ export const Form: React.FC = () => {
                             <label htmlFor="no-of-slices">
                                 Number of slices
                             </label>
-                            <input type="number" id="no-of-slices" />
+                            <input
+                                type="number"
+                                id="no-of-slices"
+                                {...register('no-of-slices', {
+                                    required: selectedType === 'pizza',
+                                })}
+                            />
                         </div>
                         <div>
                             <label htmlFor="diameter">Diameter</label>
-                            <input type="number" id="diameter" />
+                            <input
+                                type="number"
+                                id="diameter"
+                                {...register('diameter', {
+                                    required: selectedType === 'pizza',
+                                })}
+                            />
                         </div>
                     </>
                 )}
                 {selectedType === 'soup' && (
                     <div>
                         <label htmlFor="spiciness">Spiciness</label>
-                        <input type="range" id="spiciness" min={1} max={10} />
+                        <input
+                            type="range"
+                            id="spiciness"
+                            {...register('spiciness', {
+                                required: selectedType === 'soup',
+                                min: 1,
+                                max: 10,
+                            })}
+                        />
                     </div>
                 )}
                 {selectedType === 'sandwich' && (
                     <div>
                         <label htmlFor="slices-of-bread">Slices of bread</label>
-                        <input type="number" id="slices-of-bread" min={1} />
+                        <input
+                            type="number"
+                            id="slices-of-bread"
+                            {...register('slices-of-bread', {
+                                required: selectedType === 'sandwich',
+                                min: 1,
+                            })}
+                        />
                     </div>
                 )}
                 <div>
