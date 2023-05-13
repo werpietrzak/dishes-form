@@ -5,11 +5,16 @@ import { DISH_TYPES } from '../../constants';
 import './form.scss';
 
 const CN = 'form';
+const ERROR_MESSAGE = 'Field is required.';
 
 export const Form: React.FC = () => {
     const [selectedType, setSelectedType] = useState<string | null>(null);
 
-    const { register, handleSubmit } = useForm();
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+    } = useForm();
 
     const handleSelectType = (event: ChangeEvent<HTMLSelectElement>): void => {
         setSelectedType(event.target.value);
@@ -29,6 +34,9 @@ export const Form: React.FC = () => {
                         id="name"
                         {...register('name', { required: true })}
                     />
+                    {errors.name?.type === 'required' && (
+                        <p role="alert">{ERROR_MESSAGE}</p>
+                    )}
                 </div>
                 <div>
                     <label htmlFor="prep-time">Preparation time</label>
@@ -37,6 +45,9 @@ export const Form: React.FC = () => {
                         id="prep-time"
                         {...register('prep-time', { required: true })}
                     />
+                    {errors['prep-time']?.type === 'required' && (
+                        <p role="alert">{ERROR_MESSAGE}</p>
+                    )}
                 </div>
                 <div>
                     <label htmlFor="dish-type">Type</label>
@@ -55,6 +66,9 @@ export const Form: React.FC = () => {
                             </option>
                         ))}
                     </select>
+                    {errors['dish-type']?.type === 'required' && (
+                        <p role="alert">{ERROR_MESSAGE}</p>
+                    )}
                 </div>
                 {selectedType === 'pizza' && (
                     <>
@@ -69,6 +83,9 @@ export const Form: React.FC = () => {
                                     required: selectedType === 'pizza',
                                 })}
                             />
+                            {errors['no-of-slices']?.type === 'required' && (
+                                <p role="alert">{ERROR_MESSAGE}</p>
+                            )}
                         </div>
                         <div>
                             <label htmlFor="diameter">Diameter</label>
@@ -79,6 +96,9 @@ export const Form: React.FC = () => {
                                     required: selectedType === 'pizza',
                                 })}
                             />
+                            {errors.diameter?.type === 'required' && (
+                                <p role="alert">{ERROR_MESSAGE}</p>
+                            )}
                         </div>
                     </>
                 )}
@@ -88,12 +108,17 @@ export const Form: React.FC = () => {
                         <input
                             type="range"
                             id="spiciness"
+                            min={0}
+                            max={10}
+                            defaultValue={0}
                             {...register('spiciness', {
                                 required: selectedType === 'soup',
                                 min: 1,
-                                max: 10,
                             })}
                         />
+                        {errors.spiciness?.type === 'required' && (
+                            <p role="alert">{ERROR_MESSAGE}</p>
+                        )}
                     </div>
                 )}
                 {selectedType === 'sandwich' && (
@@ -107,6 +132,9 @@ export const Form: React.FC = () => {
                                 min: 1,
                             })}
                         />
+                        {errors['slices-of-bread']?.type === 'required' && (
+                            <p role="alert">{ERROR_MESSAGE}</p>
+                        )}
                     </div>
                 )}
                 <div>
