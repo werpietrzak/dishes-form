@@ -20,8 +20,26 @@ export const Form: React.FC = () => {
         setSelectedType(event.target.value);
     };
 
-    const onSubmit = (data: FieldValues): void => {
+    const onSubmit = async (data: FieldValues): Promise<void> => {
         console.log(data);
+
+        const URL =
+            'https://umzzcc503l.execute-api.us-west-2.amazonaws.com/dishes/';
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+
+        try {
+            const response = await fetch(URL, options);
+            const responseData = await response.json();
+            console.log(responseData);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -43,9 +61,9 @@ export const Form: React.FC = () => {
                     <input
                         type="time"
                         id="prep-time"
-                        {...register('prep-time', { required: true })}
+                        {...register('preparation_time', { required: true })}
                     />
-                    {errors['prep-time']?.type === 'required' && (
+                    {errors['preparation_time']?.type === 'required' && (
                         <p role="alert">{ERROR_MESSAGE}</p>
                     )}
                 </div>
@@ -54,7 +72,7 @@ export const Form: React.FC = () => {
                     <select
                         id="dish-type"
                         defaultValue=""
-                        {...register('dish-type', {
+                        {...register('type', {
                             required: true,
                             onChange: event => handleSelectType(event),
                         })}
@@ -66,7 +84,7 @@ export const Form: React.FC = () => {
                             </option>
                         ))}
                     </select>
-                    {errors['dish-type']?.type === 'required' && (
+                    {errors.type?.type === 'required' && (
                         <p role="alert">{ERROR_MESSAGE}</p>
                     )}
                 </div>
@@ -79,11 +97,11 @@ export const Form: React.FC = () => {
                             <input
                                 type="number"
                                 id="no-of-slices"
-                                {...register('no-of-slices', {
+                                {...register('no_of_slices', {
                                     required: selectedType === 'pizza',
                                 })}
                             />
-                            {errors['no-of-slices']?.type === 'required' && (
+                            {errors['no_of_slices']?.type === 'required' && (
                                 <p role="alert">{ERROR_MESSAGE}</p>
                             )}
                         </div>
@@ -111,12 +129,12 @@ export const Form: React.FC = () => {
                             min={0}
                             max={10}
                             defaultValue={0}
-                            {...register('spiciness', {
+                            {...register('spiciness_scale', {
                                 required: selectedType === 'soup',
                                 min: 1,
                             })}
                         />
-                        {errors.spiciness?.type === 'required' && (
+                        {errors['spiciness_scale']?.type === 'required' && (
                             <p role="alert">{ERROR_MESSAGE}</p>
                         )}
                     </div>
@@ -127,12 +145,12 @@ export const Form: React.FC = () => {
                         <input
                             type="number"
                             id="slices-of-bread"
-                            {...register('slices-of-bread', {
+                            {...register('slices_of_bread', {
                                 required: selectedType === 'sandwich',
                                 min: 1,
                             })}
                         />
-                        {errors['slices-of-bread']?.type === 'required' && (
+                        {errors['slices_of_bread']?.type === 'required' && (
                             <p role="alert">{ERROR_MESSAGE}</p>
                         )}
                     </div>
