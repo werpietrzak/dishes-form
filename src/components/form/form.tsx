@@ -11,6 +11,7 @@ import {
     Slider,
     TextField,
 } from '@mui/material';
+import { postData } from './post-data';
 import { DISH_TYPES } from '../../constants';
 
 const ERROR_MESSAGES = {
@@ -36,28 +37,7 @@ export const Form: React.FC = () => {
     };
 
     const onSubmit = async (data: FieldValues): Promise<void> => {
-        console.log(data);
-
-        const URL =
-            'https://umzzcc503l.execute-api.us-west-2.amazonaws.com/dishes/';
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                ...data,
-                spiciness_scale: data['spiciness_scale'] || 1,
-            }),
-        };
-
-        try {
-            const response = await fetch(URL, options);
-            const responseData = await response.json();
-            console.log(responseData);
-        } catch (error) {
-            console.log(error);
-        }
+        await postData(data);
     };
 
     return (
