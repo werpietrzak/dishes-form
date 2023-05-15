@@ -12,9 +12,7 @@ import {
     TextField,
 } from '@mui/material';
 import { DISH_TYPES } from '../../constants';
-import './form.scss';
 
-const CN = 'form';
 const ERROR_MESSAGES = {
     required: 'Field is required.',
     invalidValue: 'Please enter a valid value.',
@@ -101,7 +99,7 @@ export const Form: React.FC = () => {
                 />
             </div>
             <div>
-                <FormControl margin="normal" sx={{ width: 200 }}>
+                <FormControl margin="normal" size="small" sx={{ width: 200 }}>
                     <InputLabel
                         id="dish-type-label"
                         error={errors.type?.type === 'required'}
@@ -112,7 +110,6 @@ export const Form: React.FC = () => {
                         labelId="dish-type-label"
                         id="dish-type"
                         label="Type"
-                        size="small"
                         defaultValue=""
                         error={errors.type?.type === 'required'}
                         {...register('type', {
@@ -120,7 +117,6 @@ export const Form: React.FC = () => {
                             onChange: event => handleSelectType(event),
                         })}
                     >
-                        <MenuItem value="" className={`${CN}__select-option`} />
                         {DISH_TYPES.map(({ label, value }) => (
                             <MenuItem key={value} value={value}>
                                 {label}
