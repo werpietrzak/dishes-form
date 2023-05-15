@@ -61,10 +61,12 @@ export const Form: React.FC = () => {
                     id="name"
                     label="Name"
                     size="small"
+                    margin="normal"
                     error={errors.name?.type === 'required'}
                     helperText={
                         errors.name?.type === 'required' ? ERROR_MESSAGE : ''
                     }
+                    sx={{ width: 200 }}
                     {...register('name', { required: true })}
                 />
             </div>
@@ -76,6 +78,8 @@ export const Form: React.FC = () => {
                     size="small"
                     defaultValue="00:00:00"
                     inputProps={{ step: 1 }}
+                    margin="normal"
+                    sx={{ width: 200 }}
                     error={errors['preparation_time']?.type === 'required'}
                     helperText={
                         errors['preparation_time']?.type === 'required'
@@ -86,7 +90,7 @@ export const Form: React.FC = () => {
                 />
             </div>
             <div>
-                <FormControl>
+                <FormControl margin="normal" sx={{ width: 200 }}>
                     <InputLabel
                         id="dish-type-label"
                         error={errors.type?.type === 'required'}
@@ -124,12 +128,14 @@ export const Form: React.FC = () => {
                             id="no-of-slices"
                             label="Number of slices"
                             size="small"
+                            margin="normal"
                             error={errors['no_of_slices']?.type === 'required'}
                             helperText={
                                 errors['no_of_slices']?.type === 'required'
                                     ? ERROR_MESSAGE
                                     : ''
                             }
+                            sx={{ width: 200 }}
                             {...register('no_of_slices', {
                                 required: selectedType === 'pizza',
                             })}
@@ -141,12 +147,14 @@ export const Form: React.FC = () => {
                             id="diameter"
                             label="Diameter"
                             size="small"
+                            margin="normal"
                             error={errors.diameter?.type === 'required'}
                             helperText={
                                 errors.diameter?.type === 'required'
                                     ? ERROR_MESSAGE
                                     : ''
                             }
+                            sx={{ width: 200 }}
                             {...register('diameter', {
                                 required: selectedType === 'pizza',
                             })}
@@ -156,33 +164,37 @@ export const Form: React.FC = () => {
             )}
             {selectedType === 'soup' && (
                 <div>
-                    <label>Spiciness</label>
-                    <Controller
-                        name="spiciness_scale"
-                        control={control}
-                        /*TO DO: add requirements to this field
+                    <FormControl margin="normal" sx={{ width: 200 }}>
+                        <label>Spiciness</label>
+                        <Controller
+                            name="spiciness_scale"
+                            control={control}
+                            /*TO DO: add requirements to this field
                         {...register('spiciness_scale', {
                             required: selectedType === 'soup',
                             min: 1,
                         })}*/
-                        render={({ field }) => (
-                            <Slider
-                                step={1}
-                                min={0}
-                                max={10}
-                                marks={Array.from(Array(11).keys()).map(el => ({
-                                    value: el,
-                                    label: el !== 0 ? el : '',
-                                }))}
-                                onChange={(_, value) => {
-                                    field.onChange(value);
-                                }}
-                            />
+                            render={({ field }) => (
+                                <Slider
+                                    step={1}
+                                    min={0}
+                                    max={10}
+                                    marks={Array.from(Array(11).keys()).map(
+                                        el => ({
+                                            value: el,
+                                            label: el !== 0 ? el : '',
+                                        })
+                                    )}
+                                    onChange={(_, value) => {
+                                        field.onChange(value);
+                                    }}
+                                />
+                            )}
+                        />
+                        {errors['spiciness_scale']?.type === 'required' && (
+                            <p role="alert">{ERROR_MESSAGE}</p>
                         )}
-                    />
-                    {errors['spiciness_scale']?.type === 'required' && (
-                        <p role="alert">{ERROR_MESSAGE}</p>
-                    )}
+                    </FormControl>
                 </div>
             )}
             {selectedType === 'sandwich' && (
@@ -192,12 +204,14 @@ export const Form: React.FC = () => {
                         id="slices-of-bread"
                         label="Slices of bread"
                         size="small"
+                        margin="normal"
                         error={errors['slices_of_bread']?.type === 'required'}
                         helperText={
                             errors['slices_of_bread']?.type === 'required'
                                 ? ERROR_MESSAGE
                                 : ''
                         }
+                        sx={{ width: 200 }}
                         {...register('slices_of_bread', {
                             required: selectedType === 'sandwich',
                             min: 1,
@@ -206,9 +220,11 @@ export const Form: React.FC = () => {
                 </div>
             )}
             <div>
-                <Button type="submit" variant="contained">
-                    Submit
-                </Button>
+                <FormControl margin="normal">
+                    <Button type="submit" variant="contained">
+                        Submit
+                    </Button>
+                </FormControl>
             </div>
         </form>
     );
