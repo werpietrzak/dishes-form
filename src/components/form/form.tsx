@@ -45,7 +45,10 @@ export const Form: React.FC = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify({
+                ...data,
+                spiciness_scale: data['spiciness_scale'] || 1,
+            }),
         };
 
         try {
@@ -181,15 +184,11 @@ export const Form: React.FC = () => {
                         <Controller
                             name="spiciness_scale"
                             control={control}
-                            /*TO DO: add requirements to this field
-                        {...register('spiciness_scale', {
-                            required: selectedType === 'soup',
-                            min: 1,
-                        })}*/
                             render={({ field }) => (
                                 <Slider
+                                    size="small"
                                     step={1}
-                                    min={0}
+                                    min={1}
                                     max={10}
                                     marks={Array.from(Array(11).keys()).map(
                                         el => ({
