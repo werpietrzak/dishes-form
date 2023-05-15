@@ -2,6 +2,8 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+[Live preview](https://werpietrzak.github.io/dishes-form/)
+
 Node.js v17.2.0.  
 npm v8.1.4
 
