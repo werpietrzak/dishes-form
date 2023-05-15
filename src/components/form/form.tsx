@@ -1,7 +1,8 @@
 import React, { ChangeEvent, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { FieldValues } from 'react-hook-form/dist/types';
+import { FieldError, FieldValues } from 'react-hook-form/dist/types';
 import {
+    Box,
     Button,
     FormControl,
     FormHelperText,
@@ -22,81 +23,73 @@ const ERROR_MESSAGES = {
 export const Form: React.FC = () => {
     const [selectedType, setSelectedType] = useState<string | null>(null);
 
+    const handleSelectType = (event: ChangeEvent<HTMLSelectElement>): void => {
+        setSelectedType(event.target.value);
+    };
+
     const {
         control,
         register,
         formState: { errors },
         handleSubmit,
+        setError,
     } = useForm();
 
     const validatePrepTime = (value: string): string | undefined =>
         value === '00:00:00' ? 'Please enter a valid value.' : undefined;
 
-    const handleSelectType = (event: ChangeEvent<HTMLSelectElement>): void => {
-        setSelectedType(event.target.value);
-    };
-
     const onSubmit = async (data: FieldValues): Promise<void> => {
-        await postData(data);
+        await postData(data, setError);
     };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <div>
+            <Box>
                 <TextField
                     type="text"
                     id="name"
                     label="Name"
                     size="small"
                     margin="normal"
-                    error={errors.name?.type === 'required'}
-                    helperText={
-                        errors.name?.type === 'required'
-                            ? ERROR_MESSAGES.required
-                            : ''
-                    }
                     sx={{ width: 200 }}
-                    {...register('name', { required: true })}
+                    error={!!errors.name}
+                    helperText={(errors.name as FieldError)?.message || ''}
+                    {...register('name', { required: ERROR_MESSAGES.required })}
                 />
-            </div>
-            <div>
+            </Box>
+            <Box>
                 <TextField
                     type="time"
-                    id="prep-time"
+                    id="preparation_time"
                     label="Preparation time"
-                    size="small"
                     defaultValue="00:00:00"
                     inputProps={{ step: 1 }}
+                    size="small"
                     margin="normal"
                     sx={{ width: 200 }}
-                    error={!!errors['preparation_time']}
+                    error={!!errors.preparation_time}
                     helperText={
-                        !!errors['preparation_time']
-                            ? ERROR_MESSAGES.invalidValue
-                            : ''
+                        (errors.preparation_time as FieldError)?.message || ''
                     }
                     {...register('preparation_time', {
-                        required: true,
+                        required: ERROR_MESSAGES.required,
                         validate: validatePrepTime,
                     })}
                 />
-            </div>
-            <div>
-                <FormControl margin="normal" size="small" sx={{ width: 200 }}>
-                    <InputLabel
-                        id="dish-type-label"
-                        error={errors.type?.type === 'required'}
-                    >
+            </Box>
+            <Box>
+                <FormControl size="small" margin="normal" sx={{ width: 200 }}>
+                    <InputLabel id="type-label" error={!!errors.type}>
                         Type
                     </InputLabel>
                     <Select
-                        labelId="dish-type-label"
-                        id="dish-type"
+                        id="type"
+                        labelId="type-label"
                         label="Type"
                         defaultValue=""
-                        error={errors.type?.type === 'required'}
+                        error={!!errors.type}
                         {...register('type', {
-                            required: true,
+                            required: ERROR_MESSAGES.required,
                             onChange: event => handleSelectType(event),
                         })}
                     >
@@ -106,59 +99,59 @@ export const Form: React.FC = () => {
                             </MenuItem>
                         ))}
                     </Select>
-                    {errors.type?.type === 'required' && (
+                    {!!errors.type && (
                         <FormHelperText error>
-                            {ERROR_MESSAGES.required}
+                            {(errors.type as FieldError)?.message}
                         </FormHelperText>
                     )}
                 </FormControl>
-            </div>
+            </Box>
             {selectedType === 'pizza' && (
                 <>
-                    <div>
+                    <Box>
                         <TextField
                             type="number"
-                            id="no-of-slices"
+                            id="no_of_slices"
                             label="Number of slices"
                             size="small"
                             margin="normal"
-                            inputProps={{ min: 1 }}
-                            error={errors['no_of_slices']?.type === 'required'}
-                            helperText={
-                                errors['no_of_slices']?.type === 'required'
-                                    ? ERROR_MESSAGES.required
-                                    : ''
-                            }
                             sx={{ width: 200 }}
+                            error={!!errors.no_of_slices}
+                            helperText={
+                                (errors.no_of_slices as FieldError)?.message ||
+                                ''
+                            }
                             {...register('no_of_slices', {
-                                required: selectedType === 'pizza',
+                                required:
+                                    selectedType === 'pizza' &&
+                                    ERROR_MESSAGES.required,
                             })}
                         />
-                    </div>
-                    <div>
+                    </Box>
+                    <Box>
                         <TextField
                             type="number"
                             id="diameter"
                             label="Diameter"
                             size="small"
                             margin="normal"
-                            inputProps={{ min: 0.1, step: 0.1 }}
-                            error={errors.diameter?.type === 'required'}
-                            helperText={
-                                errors.diameter?.type === 'required'
-                                    ? ERROR_MESSAGES.required
-                                    : ''
-                            }
                             sx={{ width: 200 }}
+                            inputProps={{ step: 0.1 }}
+                            error={!!errors.diameter}
+                            helperText={
+                                (errors.diameter as FieldError)?.message || ''
+                            }
                             {...register('diameter', {
-                                required: selectedType === 'pizza',
+                                required:
+                                    selectedType === 'pizza' &&
+                                    ERROR_MESSAGES.required,
                             })}
                         />
-                    </div>
+                    </Box>
                 </>
             )}
             {selectedType === 'soup' && (
-                <div>
+                <Box>
                     <FormControl margin="normal" sx={{ width: 200 }}>
                         <label>Spiciness</label>
                         <Controller
@@ -167,13 +160,14 @@ export const Form: React.FC = () => {
                             render={({ field }) => (
                                 <Slider
                                     size="small"
-                                    step={1}
                                     min={1}
                                     max={10}
-                                    marks={Array.from(Array(11).keys()).map(
-                                        el => ({
-                                            value: el,
-                                            label: el !== 0 ? el : '',
+                                    step={1}
+                                    marks={Array.from(
+                                        { length: 10 },
+                                        (_, i) => ({
+                                            value: i + 1,
+                                            label: i + 1,
                                         })
                                     )}
                                     onChange={(_, value) => {
@@ -182,42 +176,38 @@ export const Form: React.FC = () => {
                                 />
                             )}
                         />
-                        {errors['spiciness_scale']?.type === 'required' && (
-                            <p role="alert">{ERROR_MESSAGES.required}</p>
-                        )}
                     </FormControl>
-                </div>
+                </Box>
             )}
             {selectedType === 'sandwich' && (
-                <div>
+                <Box>
                     <TextField
                         type="number"
-                        id="slices-of-bread"
+                        id="slices_of_bread"
                         label="Slices of bread"
                         size="small"
                         margin="normal"
-                        inputProps={{ min: 1 }}
-                        error={errors['slices_of_bread']?.type === 'required'}
-                        helperText={
-                            errors['slices_of_bread']?.type === 'required'
-                                ? ERROR_MESSAGES.required
-                                : ''
-                        }
                         sx={{ width: 200 }}
+                        error={!!errors.slices_of_bread}
+                        helperText={
+                            (errors.slices_of_bread as FieldError)?.message ||
+                            ''
+                        }
                         {...register('slices_of_bread', {
-                            required: selectedType === 'sandwich',
-                            min: 1,
+                            required:
+                                selectedType === 'sandwich' &&
+                                ERROR_MESSAGES.required,
                         })}
                     />
-                </div>
+                </Box>
             )}
-            <div>
+            <Box>
                 <FormControl margin="normal">
                     <Button type="submit" variant="contained">
                         Submit
                     </Button>
                 </FormControl>
-            </div>
+            </Box>
         </form>
     );
 };

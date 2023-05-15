@@ -1,6 +1,9 @@
-import { FieldValues } from 'react-hook-form/dist/types';
+import { FieldValues, UseFormSetError } from 'react-hook-form/dist/types';
 
-export const postData = async (data: FieldValues): Promise<void> => {
+export const postData = async (
+    data: FieldValues,
+    setError: UseFormSetError<FieldValues>
+): Promise<void> => {
     const {
         name,
         preparation_time,
@@ -36,7 +39,16 @@ export const postData = async (data: FieldValues): Promise<void> => {
         const response = await fetch(URL, options);
         const responseData = await response.json();
         console.log(responseData);
+
+        if (response.status === 400) {
+            Object.keys(responseData).forEach(key => {
+                setError(key, {
+                    type: 'server',
+                    message: responseData[key][0],
+                });
+            });
+        }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 };
