@@ -51,7 +51,7 @@ export const Form: React.FC = () => {
                     label="Name"
                     size="small"
                     margin="normal"
-                    sx={{ width: 200 }}
+                    sx={{ width: 300 }}
                     error={!!errors.name}
                     helperText={(errors.name as FieldError)?.message || ''}
                     {...register('name', { required: ERROR_MESSAGES.required })}
@@ -66,7 +66,7 @@ export const Form: React.FC = () => {
                     inputProps={{ step: 1 }}
                     size="small"
                     margin="normal"
-                    sx={{ width: 200 }}
+                    sx={{ width: 300 }}
                     error={!!errors.preparation_time}
                     helperText={
                         (errors.preparation_time as FieldError)?.message || ''
@@ -78,7 +78,7 @@ export const Form: React.FC = () => {
                 />
             </Box>
             <Box>
-                <FormControl size="small" margin="normal" sx={{ width: 200 }}>
+                <FormControl size="small" margin="normal" sx={{ width: 300 }}>
                     <InputLabel id="type-label" error={!!errors.type}>
                         Type
                     </InputLabel>
@@ -115,7 +115,7 @@ export const Form: React.FC = () => {
                             label="Number of slices"
                             size="small"
                             margin="normal"
-                            sx={{ width: 200 }}
+                            sx={{ width: 300 }}
                             error={!!errors.no_of_slices}
                             helperText={
                                 (errors.no_of_slices as FieldError)?.message ||
@@ -135,7 +135,7 @@ export const Form: React.FC = () => {
                             label="Diameter"
                             size="small"
                             margin="normal"
-                            sx={{ width: 200 }}
+                            sx={{ width: 300 }}
                             inputProps={{ step: 0.1 }}
                             error={!!errors.diameter}
                             helperText={
@@ -152,7 +152,7 @@ export const Form: React.FC = () => {
             )}
             {selectedType === 'soup' && (
                 <Box>
-                    <FormControl margin="normal" sx={{ width: 200 }}>
+                    <FormControl margin="normal" sx={{ width: 300 }}>
                         <label>Spiciness</label>
                         <Controller
                             name="spiciness_scale"
@@ -187,7 +187,7 @@ export const Form: React.FC = () => {
                         label="Slices of bread"
                         size="small"
                         margin="normal"
-                        sx={{ width: 200 }}
+                        sx={{ width: 300 }}
                         error={!!errors.slices_of_bread}
                         helperText={
                             (errors.slices_of_bread as FieldError)?.message ||
