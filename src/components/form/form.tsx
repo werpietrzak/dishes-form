@@ -15,7 +15,10 @@ import { DISH_TYPES } from '../../constants';
 import './form.scss';
 
 const CN = 'form';
-const ERROR_MESSAGE = 'Field is required.';
+const ERROR_MESSAGES = {
+    required: 'Field is required.',
+    invalidValue: 'Please enter a valid value.',
+};
 
 export const Form: React.FC = () => {
     const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -26,6 +29,9 @@ export const Form: React.FC = () => {
         formState: { errors },
         handleSubmit,
     } = useForm();
+
+    const validatePrepTime = (value: string): string | undefined =>
+        value === '00:00:00' ? 'Please enter a valid value.' : undefined;
 
     const handleSelectType = (event: ChangeEvent<HTMLSelectElement>): void => {
         setSelectedType(event.target.value);
@@ -64,7 +70,9 @@ export const Form: React.FC = () => {
                     margin="normal"
                     error={errors.name?.type === 'required'}
                     helperText={
-                        errors.name?.type === 'required' ? ERROR_MESSAGE : ''
+                        errors.name?.type === 'required'
+                            ? ERROR_MESSAGES.required
+                            : ''
                     }
                     sx={{ width: 200 }}
                     {...register('name', { required: true })}
@@ -80,13 +88,16 @@ export const Form: React.FC = () => {
                     inputProps={{ step: 1 }}
                     margin="normal"
                     sx={{ width: 200 }}
-                    error={errors['preparation_time']?.type === 'required'}
+                    error={!!errors['preparation_time']}
                     helperText={
-                        errors['preparation_time']?.type === 'required'
-                            ? ERROR_MESSAGE
+                        !!errors['preparation_time']
+                            ? ERROR_MESSAGES.invalidValue
                             : ''
                     }
-                    {...register('preparation_time', { required: true })}
+                    {...register('preparation_time', {
+                        required: true,
+                        validate: validatePrepTime,
+                    })}
                 />
             </div>
             <div>
@@ -102,6 +113,7 @@ export const Form: React.FC = () => {
                         id="dish-type"
                         label="Type"
                         size="small"
+                        defaultValue=""
                         error={errors.type?.type === 'required'}
                         {...register('type', {
                             required: true,
@@ -116,7 +128,9 @@ export const Form: React.FC = () => {
                         ))}
                     </Select>
                     {errors.type?.type === 'required' && (
-                        <FormHelperText error>{ERROR_MESSAGE}</FormHelperText>
+                        <FormHelperText error>
+                            {ERROR_MESSAGES.required}
+                        </FormHelperText>
                     )}
                 </FormControl>
             </div>
@@ -132,7 +146,7 @@ export const Form: React.FC = () => {
                             error={errors['no_of_slices']?.type === 'required'}
                             helperText={
                                 errors['no_of_slices']?.type === 'required'
-                                    ? ERROR_MESSAGE
+                                    ? ERROR_MESSAGES.required
                                     : ''
                             }
                             sx={{ width: 200 }}
@@ -151,7 +165,7 @@ export const Form: React.FC = () => {
                             error={errors.diameter?.type === 'required'}
                             helperText={
                                 errors.diameter?.type === 'required'
-                                    ? ERROR_MESSAGE
+                                    ? ERROR_MESSAGES.required
                                     : ''
                             }
                             sx={{ width: 200 }}
@@ -192,7 +206,7 @@ export const Form: React.FC = () => {
                             )}
                         />
                         {errors['spiciness_scale']?.type === 'required' && (
-                            <p role="alert">{ERROR_MESSAGE}</p>
+                            <p role="alert">{ERROR_MESSAGES.required}</p>
                         )}
                     </FormControl>
                 </div>
@@ -208,7 +222,7 @@ export const Form: React.FC = () => {
                         error={errors['slices_of_bread']?.type === 'required'}
                         helperText={
                             errors['slices_of_bread']?.type === 'required'
-                                ? ERROR_MESSAGE
+                                ? ERROR_MESSAGES.required
                                 : ''
                         }
                         sx={{ width: 200 }}
