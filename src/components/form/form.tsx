@@ -217,6 +217,7 @@ export const Form: React.FC = () => {
                         label="Slices of bread"
                         size="small"
                         margin="normal"
+                        inputProps={{ min: 1 }}
                         error={errors['slices_of_bread']?.type === 'required'}
                         helperText={
                             errors['slices_of_bread']?.type === 'required'
