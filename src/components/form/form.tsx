@@ -139,6 +139,7 @@ export const Form: React.FC = () => {
                             label="Number of slices"
                             size="small"
                             margin="normal"
+                            inputProps={{ min: 1 }}
                             error={errors['no_of_slices']?.type === 'required'}
                             helperText={
                                 errors['no_of_slices']?.type === 'required'
@@ -158,6 +159,7 @@ export const Form: React.FC = () => {
                             label="Diameter"
                             size="small"
                             margin="normal"
+                            inputProps={{ min: 0.1, step: 0.1 }}
                             error={errors.diameter?.type === 'required'}
                             helperText={
                                 errors.diameter?.type === 'required'
